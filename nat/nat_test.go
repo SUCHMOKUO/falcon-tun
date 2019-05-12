@@ -6,23 +6,6 @@ import (
 	"testing"
 )
 
-func TestIPv4ToUint32(t *testing.T) {
-	tests := []struct{
-		ip net.IP
-		res uint32
-	} {
-		{ net.IPv4(0, 0, 0, 0), 0 },
-		{ net.IPv4(1, 1, 1, 1), 16843009 },
-		{ net.IPv4(10, 192, 50, 1), 180367873 },
-	}
-
-	for _, test := range tests {
-		if res := ipv4ToUint32(test.ip); res != test.res {
-			t.Error("ipv4ToUint32 error:", test)
-		}
-	}
-}
-
 func TestRecordToUint64(t *testing.T) {
 	tests := []struct{
 		srcPort uint16
@@ -37,23 +20,6 @@ func TestRecordToUint64(t *testing.T) {
 	for _, test := range tests {
 		if res := recordToUint64(test.srcPort, test.dstIP, test.dstPort); res != test.res {
 			t.Errorf("toUint64: %v, expect %d, but get %d\n", test, test.res, res)
-		}
-	}
-}
-
-func TestUint32ToIPv4(t *testing.T) {
-	tests := []struct{
-		n uint32
-		ip net.IP
-	} {
-		{ 0, net.IPv4(0, 0, 0, 0) },
-		{ 16843009, net.IPv4(1, 1, 1, 1) },
-		{ 180367873, net.IPv4(10, 192, 50, 1) },
-	}
-
-	for _, test := range tests {
-		if ip := uint32ToIPv4(test.n); !test.ip.Equal(ip) {
-			t.Errorf("uint32ToIPv4: %v\nexpect %v, get %v\n", test, test.ip, ip)
 		}
 	}
 }
@@ -106,5 +72,9 @@ func TestNAT4_DelRecord(t *testing.T) {
 	nat4.DelRecord(natPort)
 	if len(nat4.portPool) != l {
 		t.Errorf("after put: len: %d, original: %d\n", len(nat4.portPool), l)
+	}
+	_, ip, _ := nat4.GetRecord(natPort)
+	if ip != nil {
+		t.Error(ip)
 	}
 }
