@@ -15,7 +15,7 @@ type config struct {
 	tunNet string
 }
 
-var configCache *config = nil
+var configCache *config
 
 func init() {
 	configCache = getConfigFromDB()

@@ -34,6 +34,16 @@ func GetTUNNet() string {
 	return cfg.tunNet
 }
 
+// GetTUNIP return the ip of tun device.
+func GetTUNIP() net.IP {
+	tunNet := GetTUNNet()
+	ip, _, err := net.ParseCIDR(tunNet)
+	if err != nil {
+		log.Fatalln("tun_net format error:", err)
+	}
+	return ip
+}
+
 // GetTUNNetIP return the net ip of tun net.
 func GetTUNNetIP() net.IP {
 	tunNet := GetTUNNet()
